@@ -4,9 +4,11 @@
 %}
 
 
-%token IDENT, INT, DOUBLE, BOOL, NUM, STRING
-%token LITERAL, AND, VOID, MAIN, IF
-%token STRUCT
+%token IDENT, NUM, FUNC, MAIN
+%token IF, ELSE, WHILE, RETURN
+%token INT, DOUBLE, BOOL, VOID
+%token EQUALOP, NOTEQUALOP, LTEOP, GTEOP, AND, OR
+// EQUALOP ==, NOTEQUALOP !=, LTEOP <=, GTEOP >=
 
 %right '='
 %nonassoc '>'
@@ -16,33 +18,52 @@
 
 %type <sval> IDENT
 %type <ival> NUM
-%type <obj> type
-%type <obj> exp
+%type <obj> Type
+%type <obj> Exp
 
 %%
 
-prog : { currClass = ClasseID.VarGlobal; } DecList main ;
+prog : { currClass = ClasseID.VarGlobal; } DecList Main ;
 
 DecList : Decl DecList
         | 
         ;
 
 Decl  : DeclVar
+      | DeclProt
       | DeclFunc
       ;
 
-DeclVar : Type { currentType = (TS_entry)$1; } TArray IdList ';'
+DeclVar : Type { currentType = (TS_entry) $1; } TArray IdList ';'
         ;
 
-DeclFunc  :  FUNC TypeOrVoid IDENT '(' FormalPar ')' '{' DeclFuncVar ListaCmd '}'
+// colocar o nome da funcao na tabela de simbolos com os parametros e o tipo de retorno
+DeclProt  : FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' ';' 
+              {
+                //criar funcao que valida declarao com base no prototipo
+                TS_entry nodo = new TS_entry($3, (TS_entry) $2, ClasseID.NomeFuncao);
+                nodo.locals = ts;
+                closeScope();
+                ts.insert(nodo);
+              }
+          ;
+
+DeclFunc  :  FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' '{' DeclFuncVar ListaCmd '}' 
+              {
+                //criar funcao que valida declarao com base no prototipo
+                TS_entry nodo = new TS_entry($3, (TS_entry) $2, ClasseID.NomeFuncao);
+                nodo.locals = ts;
+                closeScope();
+                ts.insert(nodo);
+              }
           ;
 
 FormalPar : ParamList
           | // vazio 
           ;
 
-ParamList : Type IDENT ',' ParamList
-          | Type IDENT
+ParamList : Type IDENT ',' ParamList { ts.insert(new TS_entry($2, (TS_entry) $1, ClasseID.NomeParam)); }
+          | Type IDENT { ts.insert(new TS_entry($2, (TS_entry) $1, ClasseID.NomeParam)); }
           ; 
 
 Block : '{' ListaCmd '}'
@@ -53,11 +74,15 @@ ListaCmd  : Cmd ListaCmd
           ;
 
 Cmd : Block
-    | WHILE '(' E ')' Cmd
-    | IDENT '=' E ';'
-    | IF '(' E ')' Cmd RestoIf
-    | IDENT'[' E ']' '=' E ';'
-    | RETURN E ';'
+    | WHILE '(' Exp ')' Cmd { if ( ((TS_entry)$3) != Tp_BOOL) 
+                                     yyerror("(sem) expressão (while) deve ser lógica "+((TS_entry)$3).getTipo());
+                            }
+    | IDENT '=' Exp ';' { TS_entry nodo = ts.pesquisa($1); validaTipo(ATRIB, nodo, (TS_entry) $3);}
+    | IF '(' Exp ')' Cmd RestoIf  {  if ( ((TS_entry)$3) != Tp_BOOL) 
+                                     yyerror("(sem) expressão (if) deve ser lógica "+((TS_entry)$3).getTipo());
+                                  }     
+    | IDENT'[' Exp ']' '=' Exp ';'
+    | RETURN Exp ';'
     ;
 
 RestoIf : ELSE Cmd
@@ -91,30 +116,18 @@ Type : INT    { $$ = Tp_INT; }
      | BOOL   { $$ = Tp_BOOL; }   
      ;
 
+//criar a acao para retorno do tipo void
 TypeOrVoid  : Type
             | VOID
             ;
 
-main :  VOID MAIN '(' ')' bloco ;
+Main :  VOID MAIN '(' ')' Block ;
 
-bloco : '{' listacmd '}';
-
-listacmd : listacmd cmd
-        |
-         ;
-
-cmd :  exp ';' 
-      | IF '(' exp ')' cmd   {  if ( ((TS_entry)$3) != Tp_BOOL) 
-                                     yyerror("(sem) expressão (if) deve ser lógica "+((TS_entry)$3).getTipo());
-                             }     
-       ;
-
-
-exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
-    | exp '>' exp { $$ = validaTipo('>', (TS_entry)$1, (TS_entry)$3); }
-    | exp AND exp { $$ = validaTipo(AND, (TS_entry)$1, (TS_entry)$3); } 
+Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
+    | Exp '>' Exp { $$ = validaTipo('>', (TS_entry)$1, (TS_entry)$3); }
+    | Exp AND Exp { $$ = validaTipo(AND, (TS_entry)$1, (TS_entry)$3); } 
     | NUM         { $$ = Tp_INT; }      
-    | '(' exp ')' { $$ = $2; }
+    | '(' Exp ')' { $$ = $2; }
     | IDENT       { TS_entry nodo = ts.pesquisa($1);
                     if (nodo == null) {
                        yyerror("(sem) var <" + $1 + "> nao declarada"); 
@@ -123,8 +136,8 @@ exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
                     else
                         $$ = nodo.getTipo();
                   }                   
-     | exp '=' exp  {  $$ = validaTipo(ATRIB, (TS_entry)$1, (TS_entry)$3);  } 
-     | exp '[' exp ']'  {  if ((TS_entry)$3 != Tp_INT) 
+     | Exp '=' Exp  {  $$ = validaTipo(ATRIB, (TS_entry)$1, (TS_entry)$3);  }
+     | Exp '[' Exp ']'  {  if ((TS_entry)$3 != Tp_INT) 
                               yyerror("(sem) indexador não é numérico ");
                            else 
                                if (((TS_entry)$1).getTipo() != Tp_ARRAY)
@@ -138,7 +151,7 @@ exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
 
   private Yylex lexer;
 
-  private TabSimb ts;
+  
 
   public static TS_entry Tp_INT =  new TS_entry("int", null, ClasseID.TipoBase);
   public static TS_entry Tp_DOUBLE = new TS_entry("double", null,  ClasseID.TipoBase);
@@ -152,6 +165,8 @@ exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
   public static final int ATRIB = 1600;
 
   private String currEscopo;
+  private TabSimb globalScope = new TabSimb();
+  private TabSimb ts = globalScope;
 
   private ClasseID currClass;
   private TS_entry currentType;
@@ -178,7 +193,7 @@ exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
   public Parser(Reader r) {
     lexer = new Yylex(r, this);
 
-    ts = new TabSimb();
+    //ts = new TabSimb();
 
     //
     // não me parece que necessitem estar na TS
@@ -264,4 +279,12 @@ exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
             return Tp_ERRO;
            
      }
+
+    void openScope() {
+        ts = new TabSimb();
+    }
+
+    void closeScope() {
+        ts = globalScope;
+    }
 

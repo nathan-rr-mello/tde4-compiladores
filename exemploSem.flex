@@ -47,15 +47,16 @@ NL  = \n|\r|\r\n
 {NUM}  { yyparser.yylval = new ParserVal(Integer.parseInt(yytext())); 
          return Parser.NUM; }
 
-int    { return Parser.INT;     }
-double  { return Parser.DOUBLE;   }
-bool   { return Parser.BOOL; }
-string { return Parser.STRING; }
-void { return Parser.VOID; }
+if { return Parser.IF;}
+else { return Parser.ELSE;}
+while { return Parser.WHILE;}
+func { return Parser.FUNC;}
+int { return Parser.INT;}
+double { return Parser.DOUBLE;}
+boolean { return Parser.BOOLEAN;}
+void { return Parser.VOID;}
+return { return Parser.RETURN;}
 main { return Parser.MAIN; }
-if { return Parser.IF; }
-struct { return Parser.STRUCT; }
-
 
 [a-zA-Z][a-zA-Z_0-9]* { yyparser.yylval = new ParserVal(yytext());
                      return Parser.IDENT; }
