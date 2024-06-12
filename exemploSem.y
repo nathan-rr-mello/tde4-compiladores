@@ -19,6 +19,7 @@
 %type <sval> IDENT
 %type <ival> NUM
 %type <obj> Type
+%type <obj> TypeOrVoid
 %type <obj> Exp
 
 %%
@@ -51,12 +52,16 @@ DeclProt  : FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' ';'
 DeclFunc  :  FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' '{' DeclFuncVar ListaCmd '}' 
               {
                 //criar funcao que valida declarao com base no prototipo
-                TS_entry nodo = new TS_entry($3, (TS_entry) $2, ClasseID.NomeFuncao);
-                nodo.locals = ts;
-                closeScope();
-                ts.insert(nodo);
+                // TS_entry nodo = new TS_entry($3, (TS_entry) $2, ClasseID.NomeFuncao);
+                // nodo.locals = ts;
+                 closeScope();
+                // ts.insert(nodo);
               }
           ;
+
+DeclFuncVar : DeclVar
+            | 
+            ;
 
 FormalPar : ParamList
           | // vazio 
@@ -77,17 +82,17 @@ Cmd : Block
     | WHILE '(' Exp ')' Cmd { if ( ((TS_entry)$3) != Tp_BOOL) 
                                      yyerror("(sem) expressão (while) deve ser lógica "+((TS_entry)$3).getTipo());
                             }
-    | IDENT '=' Exp ';' { TS_entry nodo = ts.pesquisa($1); validaTipo(ATRIB, nodo, (TS_entry) $3);}
     | IF '(' Exp ')' Cmd RestoIf  {  if ( ((TS_entry)$3) != Tp_BOOL) 
                                      yyerror("(sem) expressão (if) deve ser lógica "+((TS_entry)$3).getTipo());
                                   }     
+    | IDENT '=' Exp ';' { TS_entry nodo = ts.pesquisa($1); validaTipo(ATRIB, nodo, (TS_entry) $3);}                              
     | IDENT'[' Exp ']' '=' Exp ';'
     | RETURN Exp ';'
     ;
 
 RestoIf : ELSE Cmd
         |   // vazio
-        ; 
+        ;
 
 IdList  : Id ',' Id
         | Id
