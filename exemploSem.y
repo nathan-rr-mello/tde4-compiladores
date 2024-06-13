@@ -39,6 +39,23 @@ Decl  : DeclVar
 DeclVar : Type { currentType = (TS_entry) $1; } TArray IdList ';'
         ;
 
+IdList  : Id ',' IdList
+        | Id
+        ;
+
+Id  : IDENT   { TS_entry nodo = pesquisa($1);
+                if (nodo != null) 
+                    yyerror("(sem) variavel >" + $1 + "< jah declarada");
+                else ts.insert(new TS_entry($1, currentType, currentClass)); 
+              }  
+    ;
+
+TArray : '[' NUM ']'  TArray { currentType = new TS_entry("?", Tp_ARRAY, 
+                                                   currentClass, $2, currentType); }
+          
+       |
+       ;
+
 // colocar o nome da funcao na tabela de simbolos com os parametros e o tipo de retorno
 /* DeclProt  : FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' ';'
               {
@@ -113,25 +130,6 @@ Cmd : Block
 RestoIf : ELSE Cmd
         |   // vazio
         ;
-
-IdList  : Id ',' IdList
-        | Id
-        ;
-
-Id  : IDENT   { TS_entry nodo = pesquisa($1);
-                if (nodo != null) 
-                    yyerror("(sem) variavel >" + $1 + "< jah declarada");
-                else ts.insert(new TS_entry($1, currentType, currentClass)); 
-              }  
-    ;
-
-TArray : '[' NUM ']'  TArray { currentType = new TS_entry("?", Tp_ARRAY, 
-                                                   currentClass, $2, currentType); }
-          
-       |
-       ;
- 
-
              //
               // faria mais sentido reconhecer todos os tipos como ident! 
               // 

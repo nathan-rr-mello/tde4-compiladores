@@ -70,21 +70,18 @@ public class TS_entry {
          return "boolean";
       else if (tipo == Parser.Tp_DOUBLE)
          return "double";
-      else if (tipo.getTipo() != null)
-         return tipo2str(tipo.getTipo());
-      else if (tipo == Parser.Tp_ARRAY)
-         return String.format("array(%d,%s)",
-               tipo.nroElementos,
-               tipo2str(tipo.tipoBase));
+         
+      else if (tipo.getTipo() == Parser.Tp_ARRAY)
+         return String.format("array(%d, %s)", tipo.nroElementos, tipo2str(tipo.tipoBase));
+      else if (tipo.getTipo() == Parser.Tp_Func)
+         return String.format("func() -> %s", tipo2str(tipo.tipoBase));
 
       else if (tipo == Parser.Tp_ERRO)
          return "_erro_";
-      else if (tipo == Parser.Tp_Func)
-         return String.format("func() -> %s", tipo2str(tipo.tipoBase));
       else if (tipo == Parser.Tp_Void)
          return "void";
-      else
-         return "erro/tp";
+
+      return "erro/tp";
    }
 
    public void setLocals(TabSimb locals) {
