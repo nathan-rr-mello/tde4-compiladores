@@ -1,12 +1,14 @@
-int i, j, k;
+$TRACE_ON
+
+int i, j, a, k;
 
 double x, y;
 
-bool b;
-bool ok;
+boolean b;
+boolean ok;
 
-void main() {
-   j = k;
+func void main() {
+   j = a;
    i = 5;  
 
    x = i + 4;

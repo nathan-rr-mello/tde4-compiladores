@@ -37,10 +37,10 @@ NL  = \n|\r|\r\n
 "(" |
 ")" |
 "," |
-"\{" |
-"\}" |
-"\[" | 
-"\]"    { return (int) yycharat(0); }
+"{" |
+"}" |
+"[" | 
+"]"    { return (int) yycharat(0); }
 
 "&&" { return Parser.AND; }
 
@@ -56,15 +56,9 @@ double { return Parser.DOUBLE;}
 boolean { return Parser.BOOLEAN;}
 void { return Parser.VOID;}
 return { return Parser.RETURN;}
-main { return Parser.MAIN; }
 
 [a-zA-Z][a-zA-Z_0-9]* { yyparser.yylval = new ParserVal(yytext());
                      return Parser.IDENT; }
-
-\"[^\"]*\" { yyparser.yylval = new ParserVal(yytext());
-             return Parser.LITERAL; }
-
-
 
 {NL}   {yyline++;}
 [ \t]+ { }

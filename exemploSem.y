@@ -4,9 +4,9 @@
 %}
 
 
-%token IDENT, NUM, FUNC, MAIN
+%token IDENT, NUM, FUNC
 %token IF, ELSE, WHILE, RETURN
-%token INT, DOUBLE, BOOL, VOID
+%token INT, DOUBLE, BOOLEAN, VOID
 %token EQUALOP, NOTEQUALOP, LTEOP, GTEOP, AND, OR
 // EQUALOP ==, NOTEQUALOP !=, LTEOP <=, GTEOP >=
 
@@ -24,22 +24,23 @@
 
 %%
 
-prog : { currClass = ClasseID.VarGlobal; } DecList Main ;
+prog : { currentClass = ClasseID.VarGlobal; } DecList /*Main*/ ;
 
 DecList : Decl DecList
         | 
         ;
 
 Decl  : DeclVar
-      | DeclProt
-      | DeclFunc
+      | DeclFuncProt
+     // | DeclProt
+     // | DeclFunc
       ;
 
 DeclVar : Type { currentType = (TS_entry) $1; } TArray IdList ';'
         ;
 
 // colocar o nome da funcao na tabela de simbolos com os parametros e o tipo de retorno
-DeclProt  : FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' ';' 
+/* DeclProt  : FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' ';'
               {
                 //criar funcao que valida declarao com base no prototipo
                 TS_entry nodo = new TS_entry($3, (TS_entry) $2, ClasseID.NomeFuncao);
@@ -57,7 +58,23 @@ DeclFunc  :  FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' '{' DeclFu
                  closeScope();
                 // ts.insert(nodo);
               }
-          ;
+          ; */
+
+DeclFuncProt  : FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' RestoFuncProt
+                {
+                  //criar funcao que valida declarao com base no prototipo
+                  TS_entry tipoFuncao = new TS_entry("?", Tp_Func, currentClass);
+                  tipoFuncao.setTipoBase((TS_entry) $2);
+                  TS_entry nodo = new TS_entry($3, tipoFuncao, currentClass);
+                  nodo.setLocals(ts);
+                  closeScope();
+                  ts.insert(nodo);
+                }
+              ;
+
+RestoFuncProt : '{' DeclFuncVar ListaCmd '}' { currentClass = ClasseID.NomeFuncao;}
+              | ';' { currentClass = ClasseID.NomePrototipo; }
+              ;
 
 DeclFuncVar : DeclVar
             | 
@@ -85,7 +102,10 @@ Cmd : Block
     | IF '(' Exp ')' Cmd RestoIf  {  if ( ((TS_entry)$3) != Tp_BOOL) 
                                      yyerror("(sem) expressão (if) deve ser lógica "+((TS_entry)$3).getTipo());
                                   }     
-    | IDENT '=' Exp ';' { TS_entry nodo = ts.pesquisa($1); validaTipo(ATRIB, nodo, (TS_entry) $3);}                              
+    | IDENT '=' Exp ';' { TS_entry nodo = pesquisa($1);
+                          if (nodo != null) validaTipo(ATRIB, nodo.getTipo(), (TS_entry) $3);
+                          else yyerror("(sem) var <" + $1 + "> nao declarada");
+                        }                              
     | IDENT'[' Exp ']' '=' Exp ';'
     | RETURN Exp ';'
     ;
@@ -94,19 +114,19 @@ RestoIf : ELSE Cmd
         |   // vazio
         ;
 
-IdList  : Id ',' Id
+IdList  : Id ',' IdList
         | Id
         ;
 
-Id  : IDENT   { TS_entry nodo = ts.pesquisa($1);
+Id  : IDENT   { TS_entry nodo = pesquisa($1);
                 if (nodo != null) 
                     yyerror("(sem) variavel >" + $1 + "< jah declarada");
-                else ts.insert(new TS_entry($1, currentType, currClass)); 
+                else ts.insert(new TS_entry($1, currentType, currentClass)); 
               }  
     ;
 
 TArray : '[' NUM ']'  TArray { currentType = new TS_entry("?", Tp_ARRAY, 
-                                                   currClass, $2, currentType); }
+                                                   currentClass, $2, currentType); }
           
        |
        ;
@@ -118,22 +138,22 @@ TArray : '[' NUM ']'  TArray { currentType = new TS_entry("?", Tp_ARRAY,
 
 Type : INT    { $$ = Tp_INT; }
      | DOUBLE  { $$ = Tp_DOUBLE; }
-     | BOOL   { $$ = Tp_BOOL; }   
+     | BOOLEAN   { $$ = Tp_BOOL; }   
      ;
 
 //criar a acao para retorno do tipo void
-TypeOrVoid  : Type
-            | VOID
+TypeOrVoid  : Type  { $$ = $1; }
+            | VOID { $$ = Tp_Void; }
             ;
 
-Main :  VOID MAIN '(' ')' Block ;
+//Main :  VOID MAIN '(' ')' Block ;
 
 Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
     | Exp '>' Exp { $$ = validaTipo('>', (TS_entry)$1, (TS_entry)$3); }
     | Exp AND Exp { $$ = validaTipo(AND, (TS_entry)$1, (TS_entry)$3); } 
     | NUM         { $$ = Tp_INT; }      
     | '(' Exp ')' { $$ = $2; }
-    | IDENT       { TS_entry nodo = ts.pesquisa($1);
+    | IDENT       { TS_entry nodo = pesquisa($1);
                     if (nodo == null) {
                        yyerror("(sem) var <" + $1 + "> nao declarada"); 
                        $$ = Tp_ERRO;    
@@ -153,15 +173,14 @@ Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
     ;
 
 %%
-
   private Yylex lexer;
-
-  
 
   public static TS_entry Tp_INT =  new TS_entry("int", null, ClasseID.TipoBase);
   public static TS_entry Tp_DOUBLE = new TS_entry("double", null,  ClasseID.TipoBase);
-  public static TS_entry Tp_BOOL = new TS_entry("bool", null,  ClasseID.TipoBase);
+  public static TS_entry Tp_BOOL = new TS_entry("boolean", null,  ClasseID.TipoBase);
 
+  public static TS_entry Tp_Void = new TS_entry("void", null,  ClasseID.TipoBase);
+  public static TS_entry Tp_Func = new TS_entry("func", null,  ClasseID.TipoBase);
   public static TS_entry Tp_ARRAY = new TS_entry("array", null,  ClasseID.TipoBase);
 
   public static TS_entry Tp_ERRO = new TS_entry("_erro_", null,  ClasseID.TipoBase);
@@ -173,7 +192,7 @@ Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
   private TabSimb globalScope = new TabSimb();
   private TabSimb ts = globalScope;
 
-  private ClasseID currClass;
+  private ClasseID currentClass;
   private TS_entry currentType;
 
   private int yylex () {
@@ -209,8 +228,7 @@ Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
     ts.insert(Tp_DOUBLE);
     ts.insert(Tp_BOOL);
     ts.insert(Tp_ARRAY);
-    
-
+    ts.insert(Tp_Void);
   }  
 
   public void setDebug(boolean debug) {
@@ -291,5 +309,12 @@ Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
 
     void closeScope() {
         ts = globalScope;
+    }
+
+    TS_entry pesquisa(String nome) {
+      TS_entry nodo = ts.pesquisa(nome);
+      if (nodo != null) return nodo;
+
+      return globalScope.pesquisa(nome);
     }
 

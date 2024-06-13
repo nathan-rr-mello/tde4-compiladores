@@ -2,17 +2,17 @@ int i;
 
 double x;
 
-bool b;
+boolean b;
 
 int[10] vint;
 double [20] vfloat;
-bool[30] vbool;
+boolean[30] vbool;
 
 int[20][300] matriz;
 
 int[5][10][15] cubo;
 
-void main() {
+func void main() {
 
    i = 5;
    

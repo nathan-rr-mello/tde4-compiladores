@@ -7,7 +7,7 @@
 # os arquivos JFlex.jar e yacc.linux
 #
 
-JFLEX  = java -jar JFlex.jar 
+JFLEX  = jflex
 BYACCJ = byaccj -tv -J
 JAVAC  = javac
 

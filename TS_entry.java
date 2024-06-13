@@ -71,14 +71,27 @@ public class TS_entry {
       else if (tipo == Parser.Tp_DOUBLE)
          return "double";
       else if (tipo.getTipo() != null)
+         return tipo2str(tipo.getTipo());
+      else if (tipo == Parser.Tp_ARRAY)
          return String.format("array(%d,%s)",
                tipo.nroElementos,
                tipo2str(tipo.tipoBase));
 
       else if (tipo == Parser.Tp_ERRO)
          return "_erro_";
+      else if (tipo == Parser.Tp_Func)
+         return String.format("func() -> %s", tipo2str(tipo.tipoBase));
+      else if (tipo == Parser.Tp_Void)
+         return "void";
       else
          return "erro/tp";
    }
 
+   public void setLocals(TabSimb locals) {
+      this.locals = locals;
+   }
+
+   public void setTipoBase(TS_entry tipoBase) {
+      this.tipoBase = tipoBase;
+   }
 }
