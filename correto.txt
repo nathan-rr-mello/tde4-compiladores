@@ -1,6 +1,6 @@
 $TRACE_ON
 
-int i, j, a, k;
+int i, j, k;
 
 double x, y;
 

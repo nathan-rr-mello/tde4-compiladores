@@ -1,6 +1,8 @@
     
 %{
   import java.io.*;
+  import java.util.List;
+  import java.util.Stack;
 %}
 
 
@@ -82,6 +84,7 @@ DeclFuncProt  : FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' RestoFu
                   //criar funcao que valida declarao com base no prototipo
                   TS_entry tipoFuncao = new TS_entry("?", Tp_Func, currentClass);
                   tipoFuncao.setTipoBase((TS_entry) $2);
+                  tipoFuncao.setLocals(ts);
                   TS_entry nodo = new TS_entry($3, tipoFuncao, currentClass);
                   nodo.setLocals(ts);
                   closeScope();
@@ -101,7 +104,7 @@ FormalPar : ParamList
           | // vazio 
           ;
 
-ParamList : Type IDENT ',' ParamList { ts.insert(new TS_entry($2, (TS_entry) $1, ClasseID.NomeParam)); }
+ParamList : Type IDENT { ts.insert(new TS_entry($2, (TS_entry) $1, ClasseID.NomeParam)); } ',' ParamList 
           | Type IDENT { ts.insert(new TS_entry($2, (TS_entry) $1, ClasseID.NomeParam)); }
           ; 
 
@@ -159,16 +162,39 @@ Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
                     else
                         $$ = nodo.getTipo();
                   }                   
-     | Exp '=' Exp  {  $$ = validaTipo(ATRIB, (TS_entry)$1, (TS_entry)$3);  }
-     | Exp '[' Exp ']'  {  if ((TS_entry)$3 != Tp_INT) 
-                              yyerror("(sem) indexador não é numérico ");
-                           else 
-                               if (((TS_entry)$1).getTipo() != Tp_ARRAY)
-                                  yyerror("(sem) elemento não indexado ");
-                               else 
-                                  $$ = ((TS_entry)$1).getTipoBase();
-                         } 
+    | Exp '=' Exp  {  $$ = validaTipo(ATRIB, (TS_entry)$1, (TS_entry)$3);  }
+    | Exp '[' Exp ']'  {  if ((TS_entry)$3 != Tp_INT) 
+                            yyerror("(sem) indexador não é numérico ");
+                          else 
+                              if (((TS_entry)$1).getTipo() != Tp_ARRAY)
+                                yyerror("(sem) elemento não indexado ");
+                              else 
+                                $$ = ((TS_entry)$1).getTipoBase();
+                        }
+    | IDENT { openScope(); } '(' Args ')' {  TS_entry nodo = pesquisa($1);
+                                            if (nodo == null) {
+                                              yyerror("(sem) função <" + $1 + "> nao declarada");
+
+                                            } else if (nodo.getTipo().getTipo() != Tp_Func) {
+                                              yyerror("(sem) <" + $1 + "> não é uma função");
+
+                                            } else if (!validaParams(nodo.getLocals(), ts)) {
+                                              yyerror("(sem) parametros incompativeis na chamada da funcao " + $1);
+
+                                            } else {
+                                              $$ = nodo.getTipo().getTipoBase();
+                                            }
+                                            closeScope();
+                                          }
     ;
+
+Args : ArgList
+     | //vazio
+     ;
+
+ArgList : Exp ',' ArgList { ts.insert(new TS_entry("?", (TS_entry) $1, ClasseID.NomeParam)); }
+        | Exp { ts.insert(new TS_entry("?", (TS_entry) $1, ClasseID.NomeParam)); }
+        ;
 
 %%
   private Yylex lexer;
@@ -189,6 +215,7 @@ Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
   private String currEscopo;
   private TabSimb globalScope = new TabSimb();
   private TabSimb ts = globalScope;
+  private Stack<TabSimb> scopes = new Stack<>();
 
   private ClasseID currentClass;
   private TS_entry currentType;
@@ -221,6 +248,7 @@ Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
     // não me parece que necessitem estar na TS
     // já que criei todas como public static...
     //
+    scopes.push(globalScope);
     ts.insert(Tp_ERRO);
     ts.insert(Tp_INT);
     ts.insert(Tp_DOUBLE);
@@ -302,11 +330,12 @@ Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
      }
 
     void openScope() {
+        scopes.push(ts);
         ts = new TabSimb();
     }
 
     void closeScope() {
-        ts = globalScope;
+        ts = scopes.pop();
     }
 
     TS_entry pesquisa(String nome) {
@@ -314,5 +343,22 @@ Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
       if (nodo != null) return nodo;
 
       return globalScope.pesquisa(nome);
+    }
+
+    boolean validaParams(TabSimb definition, TabSimb actual) {
+      List<TS_entry> definitionList = definition.getLista().stream().filter(e -> e.getClasse() == ClasseID.NomeParam).toList();
+      List<TS_entry> actualList = actual.getLista().stream().filter(e -> e.getClasse() == ClasseID.NomeParam).toList();
+
+      if (definitionList.size() != actualList.size()) {
+        return false;
+      }
+
+      for (int i = 0; i < definitionList.size(); i++) {
+        if (definitionList.get(i).getTipo() != actualList.get(i).getTipo()) {
+          return false;
+        }
+      }
+
+      return true;
     }
 

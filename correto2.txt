@@ -1,0 +1,32 @@
+
+int i, j, k;
+
+double x, y;
+
+boolean b;
+boolean ok;
+
+func int plusOne(int num) {
+   return num + 1;
+}
+
+func void main() {
+    double a;
+    a = plusOne(2);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

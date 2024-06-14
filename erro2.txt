@@ -1,38 +1,1013 @@
-int i;
-int j;
-int k;
+state 67, shifting to state 80
+loop
+state 80, reducing 3 by rule 44 (Exp : '(' Exp ')')
+reduce
+after reduction, shifting from state 68 to state 81
+loop
+yyn:0  state:81  yychar:-1
+ next yychar:272
+reduce
+state 81, reducing 3 by rule 42 (Exp : Exp AND Exp)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:272
+state 62, shifting to state 68
+loop
+yyn:0  state:68  yychar:-1
+ next yychar:40
+state 68, shifting to state 57
+loop
+yyn:0  state:57  yychar:-1
+ next yychar:257
+state 57, shifting to state 55
+loop
+yyn:0  state:55  yychar:-1
+ next yychar:62
+reduce
+state 55, reducing 1 by rule 45 (Exp : IDENT)
+reduce
+after reduction, shifting from state 57 to state 67
+loop
+yyn:0  state:67  yychar:62
+state 67, shifting to state 70
+loop
+yyn:0  state:70  yychar:-1
+ next yychar:258
+state 70, shifting to state 56
+loop
+state 56, reducing 1 by rule 43 (Exp : NUM)
+reduce
+after reduction, shifting from state 70 to state 83
+loop
+yyn:0  state:83  yychar:-1
+ next yychar:41
+reduce
+state 83, reducing 3 by rule 41 (Exp : Exp '>' Exp)
+reduce
+after reduction, shifting from state 57 to state 67
+loop
+yyn:0  state:67  yychar:41
+state 67, shifting to state 80
+loop
+state 80, reducing 3 by rule 44 (Exp : '(' Exp ')')
+reduce
+after reduction, shifting from state 68 to state 81
+loop
+yyn:0  state:81  yychar:-1
+ next yychar:59
+reduce
+state 81, reducing 3 by rule 42 (Exp : Exp AND Exp)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:59
+state 62, shifting to state 75
+loop
+state 75, reducing 4 by rule 30 (Cmd : IDENT '=' Exp ';')
+reduce
+after reduction, shifting from state 50 to state 50
+loop
+yyn:0  state:50  yychar:-1
+ next yychar:260
+state 50, shifting to state 44
+loop
+yyn:0  state:44  yychar:-1
+ next yychar:40
+state 44, shifting to state 53
+loop
+yyn:0  state:53  yychar:-1
+ next yychar:257
+state 53, shifting to state 55
+loop
+yyn:0  state:55  yychar:-1
+ next yychar:41
+reduce
+state 55, reducing 1 by rule 45 (Exp : IDENT)
+reduce
+after reduction, shifting from state 53 to state 64
+loop
+yyn:0  state:64  yychar:41
+state 64, shifting to state 77
+loop
+yyn:0  state:77  yychar:-1
+ next yychar:257
+state 77, shifting to state 43
+loop
+yyn:0  state:43  yychar:-1
+ next yychar:61
+state 43, shifting to state 51
+loop
+yyn:0  state:51  yychar:-1
+ next yychar:258
+state 51, shifting to state 56
+loop
+state 56, reducing 1 by rule 43 (Exp : NUM)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:-1
+ next yychar:59
+state 62, shifting to state 75
+loop
+state 75, reducing 4 by rule 30 (Cmd : IDENT '=' Exp ';')
+reduce
+after reduction, shifting from state 77 to state 87
+loop
+yyn:0  state:87  yychar:-1
+ next yychar:125
+reduce
+state 87, reducing 0 by rule 34 (RestoIf :)
+reduce
+after reduction, shifting from state 87 to state 95
+loop
+state 95, reducing 6 by rule 29 (Cmd : IF '(' Exp ')' Cmd RestoIf)
+reduce
+after reduction, shifting from state 50 to state 50
+loop
+yyn:0  state:50  yychar:125
+reduce
+state 50, reducing 0 by rule 26 (ListaCmd :)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 42 to state 48
+loop
+yyn:0  state:48  yychar:125
+state 48, shifting to state 60
+loop
+state 60, reducing 4 by rule 16 (RestoFuncProt : '{' DeclFuncVar ListaCmd '}')
+reduce
+after reduction, shifting from state 35 to state 39
+loop
+state 39, reducing 8 by rule 15 (DeclFuncProt : FUNC TypeOrVoid IDENT $$3 '(' FormalPar ')' RestoFuncProt)
+params: [Id: c          Classe: NomeParam       Tipo: double, Id: a             Classe: NomeParam       Tipo: int]
+reduce
+after reduction, shifting from state 9 to state 11
+loop
+state 11, reducing 1 by rule 6 (Decl : DeclFuncProt)
+reduce
+after reduction, shifting from state 9 to state 9
+loop
+yyn:0  state:9  yychar:-1
+ next yychar:0
+reduce
+state 9, reducing 0 by rule 4 (DecList :)
+reduce
+after reduction, shifting from state 9 to state 16
+loop
+state 16, reducing 2 by rule 3 (DecList : Decl DecList)
+reduce
+after reduction, shifting from state 9 to state 16
+loop
+state 16, reducing 2 by rule 3 (DecList : Decl DecList)
+reduce
+after reduction, shifting from state 9 to state 16
+loop
+state 16, reducing 2 by rule 3 (DecList : Decl DecList)
+reduce
+after reduction, shifting from state 9 to state 16
+loop
+state 16, reducing 2 by rule 3 (DecList : Decl DecList)
+reduce
+after reduction, shifting from state 9 to state 16
+loop
+state 16, reducing 2 by rule 3 (DecList : Decl DecList)
+reduce
+after reduction, shifting from state 2 to state 8
+loop
+state 8, reducing 2 by rule 2 (prog : $$1 DecList)
+reduce
+After reduction, shifting from state 0 to state 1
 
-double x;
-double y;
 
-bool b;
-bool ok;
+Listagem da tabela de simbolos:
 
-void main() {
-   j = k;
-   i = 5;  
-
-   x = i + 4;
-   y = y + i + 2;  
- 
-   ok = b && (x > i) && i > 3;
-
-   if ( ok + 1 )
-      i = 7;
-}
-
-
+Id: _erro_      Classe: TipoBase        Tipo: null
+Id: int         Classe: TipoBase        Tipo: null
+Id: double      Classe: TipoBase        Tipo: null
+Id: boolean     Classe: TipoBase        Tipo: null
+Id: array       Classe: TipoBase        Tipo: null
+Id: void        Classe: TipoBase        Tipo: null
+Id: i           Classe: VarGlobal       Tipo: int
+Id: j           Classe: VarGlobal       Tipo: int
+Id: k           Classe: VarGlobal       Tipo: int
+Id: x           Classe: VarGlobal       Tipo: double
+Id: y           Classe: VarGlobal       Tipo: double
+Id: b           Classe: VarGlobal       Tipo: boolean
+Id: ok          Classe: VarGlobal       Tipo: boolean
+[Id: c          Classe: NomeParam       Tipo: double, Id: a             Classe: NomeParam       Tipo: int]
+Id: main        Classe: NomeFuncao      Tipo: func(double, int) -> void
 
 
+Feito!
+➜  tde4-compiladores git:(main) ✗ make build             
+rm -f *~ *.class Yylex.java Parser.java y.output
+jflex exemploSem.flex
+Reading "exemploSem.flex"
+Constructing NFA : 165 states in NFA
+Converting NFA to DFA : 
+...................................................................................
+85 states before minimization, 70 states in minimized DFA
+Writing code to "Yylex.java"
+byaccj -tv -J exemploSem.y
+byaccj: 1 shift/reduce conflict.
+javac Parser.java
+Parser.java:762: error: 'void' type not allowed here
+  System.out.println("param: " + ts.listar()); }
+                                          ^
+1 error
+make: *** [Parser.class] Error 1
+➜  tde4-compiladores git:(main) ✗ make build
+rm -f *~ *.class Yylex.java Parser.java y.output
+jflex exemploSem.flex
+Reading "exemploSem.flex"
+Constructing NFA : 165 states in NFA
+Converting NFA to DFA : 
+...................................................................................
+85 states before minimization, 70 states in minimized DFA
+Writing code to "Yylex.java"
+byaccj -tv -J exemploSem.y
+byaccj: 1 shift/reduce conflict.
+javac Parser.java
+➜  tde4-compiladores git:(main) ✗ java Parser correto.txt
+
+
+Verificador semantico simples
+
+ next yychar:264
+state 2, shifting to state 4
+loop
+state 4, reducing 1 by rule 35 (Type : INT)
+reduce
+after reduction, shifting from state 2 to state 7
+loop
+state 7, reducing 0 by rule 7 ($$2 :)
+reduce
+after reduction, shifting from state 7 to state 15
+loop
+yyn:0  state:15  yychar:-1
+ next yychar:257
+reduce
+state 15, reducing 0 by rule 13 (TArray :)
+reduce
+after reduction, shifting from state 15 to state 19
+loop
+yyn:0  state:19  yychar:257
+state 19, shifting to state 22
+loop
+state 22, reducing 1 by rule 11 (Id : IDENT)
+reduce
+after reduction, shifting from state 19 to state 24
+loop
+yyn:0  state:24  yychar:-1
+ next yychar:44
+state 24, shifting to state 28
+loop
+yyn:0  state:28  yychar:-1
+ next yychar:257
+state 28, shifting to state 22
+loop
+state 22, reducing 1 by rule 11 (Id : IDENT)
+reduce
+after reduction, shifting from state 28 to state 24
+loop
+yyn:0  state:24  yychar:-1
+ next yychar:44
+state 24, shifting to state 28
+loop
+yyn:0  state:28  yychar:-1
+ next yychar:257
+state 28, shifting to state 22
+loop
+state 22, reducing 1 by rule 11 (Id : IDENT)
+reduce
+after reduction, shifting from state 28 to state 24
+loop
+yyn:0  state:24  yychar:-1
+ next yychar:59
+reduce
+state 24, reducing 1 by rule 10 (IdList : Id)
+reduce
+after reduction, shifting from state 28 to state 33
+loop
+state 33, reducing 3 by rule 9 (IdList : Id ',' IdList)
+reduce
+after reduction, shifting from state 28 to state 33
+loop
+state 33, reducing 3 by rule 9 (IdList : Id ',' IdList)
+reduce
+after reduction, shifting from state 19 to state 23
+loop
+yyn:0  state:23  yychar:59
+state 23, shifting to state 27
+loop
+state 27, reducing 5 by rule 8 (DeclVar : Type $$2 TArray IdList ';')
+reduce
+after reduction, shifting from state 2 to state 10
+loop
+state 10, reducing 1 by rule 5 (Decl : DeclVar)
+reduce
+after reduction, shifting from state 2 to state 9
+loop
+yyn:0  state:9  yychar:-1
+ next yychar:265
+state 9, shifting to state 5
+loop
+state 5, reducing 1 by rule 36 (Type : DOUBLE)
+reduce
+after reduction, shifting from state 9 to state 7
+loop
+state 7, reducing 0 by rule 7 ($$2 :)
+reduce
+after reduction, shifting from state 7 to state 15
+loop
+yyn:0  state:15  yychar:-1
+ next yychar:257
+reduce
+state 15, reducing 0 by rule 13 (TArray :)
+reduce
+after reduction, shifting from state 15 to state 19
+loop
+yyn:0  state:19  yychar:257
+state 19, shifting to state 22
+loop
+state 22, reducing 1 by rule 11 (Id : IDENT)
+reduce
+after reduction, shifting from state 19 to state 24
+loop
+yyn:0  state:24  yychar:-1
+ next yychar:44
+state 24, shifting to state 28
+loop
+yyn:0  state:28  yychar:-1
+ next yychar:257
+state 28, shifting to state 22
+loop
+state 22, reducing 1 by rule 11 (Id : IDENT)
+reduce
+after reduction, shifting from state 28 to state 24
+loop
+yyn:0  state:24  yychar:-1
+ next yychar:59
+reduce
+state 24, reducing 1 by rule 10 (IdList : Id)
+reduce
+after reduction, shifting from state 28 to state 33
+loop
+state 33, reducing 3 by rule 9 (IdList : Id ',' IdList)
+reduce
+after reduction, shifting from state 19 to state 23
+loop
+yyn:0  state:23  yychar:59
+state 23, shifting to state 27
+loop
+state 27, reducing 5 by rule 8 (DeclVar : Type $$2 TArray IdList ';')
+reduce
+after reduction, shifting from state 9 to state 10
+loop
+state 10, reducing 1 by rule 5 (Decl : DeclVar)
+reduce
+after reduction, shifting from state 9 to state 9
+loop
+yyn:0  state:9  yychar:-1
+ next yychar:266
+state 9, shifting to state 6
+loop
+state 6, reducing 1 by rule 37 (Type : BOOLEAN)
+reduce
+after reduction, shifting from state 9 to state 7
+loop
+state 7, reducing 0 by rule 7 ($$2 :)
+reduce
+after reduction, shifting from state 7 to state 15
+loop
+yyn:0  state:15  yychar:-1
+ next yychar:257
+reduce
+state 15, reducing 0 by rule 13 (TArray :)
+reduce
+after reduction, shifting from state 15 to state 19
+loop
+yyn:0  state:19  yychar:257
+state 19, shifting to state 22
+loop
+state 22, reducing 1 by rule 11 (Id : IDENT)
+reduce
+after reduction, shifting from state 19 to state 24
+loop
+yyn:0  state:24  yychar:-1
+ next yychar:59
+reduce
+state 24, reducing 1 by rule 10 (IdList : Id)
+reduce
+after reduction, shifting from state 19 to state 23
+loop
+yyn:0  state:23  yychar:59
+state 23, shifting to state 27
+loop
+state 27, reducing 5 by rule 8 (DeclVar : Type $$2 TArray IdList ';')
+reduce
+after reduction, shifting from state 9 to state 10
+loop
+state 10, reducing 1 by rule 5 (Decl : DeclVar)
+reduce
+after reduction, shifting from state 9 to state 9
+loop
+yyn:0  state:9  yychar:-1
+ next yychar:266
+state 9, shifting to state 6
+loop
+state 6, reducing 1 by rule 37 (Type : BOOLEAN)
+reduce
+after reduction, shifting from state 9 to state 7
+loop
+state 7, reducing 0 by rule 7 ($$2 :)
+reduce
+after reduction, shifting from state 7 to state 15
+loop
+yyn:0  state:15  yychar:-1
+ next yychar:257
+reduce
+state 15, reducing 0 by rule 13 (TArray :)
+reduce
+after reduction, shifting from state 15 to state 19
+loop
+yyn:0  state:19  yychar:257
+state 19, shifting to state 22
+loop
+state 22, reducing 1 by rule 11 (Id : IDENT)
+reduce
+after reduction, shifting from state 19 to state 24
+loop
+yyn:0  state:24  yychar:-1
+ next yychar:59
+reduce
+state 24, reducing 1 by rule 10 (IdList : Id)
+reduce
+after reduction, shifting from state 19 to state 23
+loop
+yyn:0  state:23  yychar:59
+state 23, shifting to state 27
+loop
+state 27, reducing 5 by rule 8 (DeclVar : Type $$2 TArray IdList ';')
+reduce
+after reduction, shifting from state 9 to state 10
+loop
+state 10, reducing 1 by rule 5 (Decl : DeclVar)
+reduce
+after reduction, shifting from state 9 to state 9
+loop
+yyn:0  state:9  yychar:-1
+ next yychar:259
+state 9, shifting to state 3
+loop
+yyn:0  state:3  yychar:-1
+ next yychar:267
+state 3, shifting to state 12
+loop
+state 12, reducing 1 by rule 39 (TypeOrVoid : VOID)
+reduce
+after reduction, shifting from state 3 to state 14
+loop
+yyn:0  state:14  yychar:-1
+ next yychar:257
+state 14, shifting to state 17
+loop
+state 17, reducing 0 by rule 14 ($$3 :)
+reduce
+after reduction, shifting from state 17 to state 20
+loop
+yyn:0  state:20  yychar:-1
+ next yychar:40
+state 20, shifting to state 25
+loop
+yyn:0  state:25  yychar:-1
+ next yychar:264
+state 25, shifting to state 4
+loop
+state 4, reducing 1 by rule 35 (Type : INT)
+reduce
+after reduction, shifting from state 25 to state 29
+loop
+yyn:0  state:29  yychar:-1
+ next yychar:257
+state 29, shifting to state 34
+loop
+yyn:0  state:34  yychar:-1
+ next yychar:44
+state 34, shifting to state 36
+loop
+yyn:0  state:36  yychar:-1
+ next yychar:265
+state 36, shifting to state 5
+loop
+state 5, reducing 1 by rule 36 (Type : DOUBLE)
+reduce
+after reduction, shifting from state 36 to state 29
+loop
+yyn:0  state:29  yychar:-1
+ next yychar:257
+state 29, shifting to state 34
+loop
+yyn:0  state:34  yychar:-1
+ next yychar:41
+reduce
+state 34, reducing 2 by rule 23 (ParamList : Type IDENT)
+func 
+
+
+
+Listagem da tabela de simbolos:
 
 
 
 
+Listagem da tabela de simbolos:
+
+Id: c           Classe: NomeParam       Tipo: double
+Id: a           Classe: NomeParam       Tipo: int
+reduce
+after reduction, shifting from state 25 to state 31
+loop
+state 31, reducing 1 by rule 20 (FormalPar : ParamList)
+reduce
+after reduction, shifting from state 25 to state 30
+loop
+yyn:0  state:30  yychar:41
+state 30, shifting to state 35
+loop
+yyn:0  state:35  yychar:-1
+ next yychar:123
+state 35, shifting to state 38
+loop
+yyn:0  state:38  yychar:-1
+ next yychar:257
+reduce
+state 38, reducing 0 by rule 19 (DeclFuncVar :)
+reduce
+after reduction, shifting from state 38 to state 42
+loop
+yyn:0  state:42  yychar:257
+state 42, shifting to state 43
+loop
+yyn:0  state:43  yychar:-1
+ next yychar:61
+state 43, shifting to state 51
+loop
+yyn:0  state:51  yychar:-1
+ next yychar:257
+state 51, shifting to state 55
+loop
+yyn:0  state:55  yychar:-1
+ next yychar:59
+reduce
+state 55, reducing 1 by rule 45 (Exp : IDENT)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:59
+state 62, shifting to state 75
+loop
+state 75, reducing 4 by rule 30 (Cmd : IDENT '=' Exp ';')
+reduce
+after reduction, shifting from state 42 to state 50
+loop
+yyn:0  state:50  yychar:-1
+ next yychar:257
+state 50, shifting to state 43
+loop
+yyn:0  state:43  yychar:-1
+ next yychar:61
+state 43, shifting to state 51
+loop
+yyn:0  state:51  yychar:-1
+ next yychar:258
+state 51, shifting to state 56
+loop
+state 56, reducing 1 by rule 43 (Exp : NUM)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:-1
+ next yychar:59
+state 62, shifting to state 75
+loop
+state 75, reducing 4 by rule 30 (Cmd : IDENT '=' Exp ';')
+reduce
+after reduction, shifting from state 50 to state 50
+loop
+yyn:0  state:50  yychar:-1
+ next yychar:257
+state 50, shifting to state 43
+loop
+yyn:0  state:43  yychar:-1
+ next yychar:61
+state 43, shifting to state 51
+loop
+yyn:0  state:51  yychar:-1
+ next yychar:257
+state 51, shifting to state 55
+loop
+yyn:0  state:55  yychar:-1
+ next yychar:43
+reduce
+state 55, reducing 1 by rule 45 (Exp : IDENT)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:43
+state 62, shifting to state 71
+loop
+yyn:0  state:71  yychar:-1
+ next yychar:258
+state 71, shifting to state 56
+loop
+state 56, reducing 1 by rule 43 (Exp : NUM)
+reduce
+after reduction, shifting from state 71 to state 84
+loop
+yyn:0  state:84  yychar:-1
+ next yychar:59
+reduce
+state 84, reducing 3 by rule 40 (Exp : Exp '+' Exp)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:59
+state 62, shifting to state 75
+loop
+state 75, reducing 4 by rule 30 (Cmd : IDENT '=' Exp ';')
+reduce
+after reduction, shifting from state 50 to state 50
+loop
+yyn:0  state:50  yychar:-1
+ next yychar:257
+state 50, shifting to state 43
+loop
+yyn:0  state:43  yychar:-1
+ next yychar:61
+state 43, shifting to state 51
+loop
+yyn:0  state:51  yychar:-1
+ next yychar:257
+state 51, shifting to state 55
+loop
+yyn:0  state:55  yychar:-1
+ next yychar:43
+reduce
+state 55, reducing 1 by rule 45 (Exp : IDENT)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:43
+state 62, shifting to state 71
+loop
+yyn:0  state:71  yychar:-1
+ next yychar:257
+state 71, shifting to state 55
+loop
+yyn:0  state:55  yychar:-1
+ next yychar:43
+reduce
+state 55, reducing 1 by rule 45 (Exp : IDENT)
+reduce
+after reduction, shifting from state 71 to state 84
+loop
+yyn:0  state:84  yychar:43
+reduce
+state 84, reducing 3 by rule 40 (Exp : Exp '+' Exp)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:43
+state 62, shifting to state 71
+loop
+yyn:0  state:71  yychar:-1
+ next yychar:258
+state 71, shifting to state 56
+loop
+state 56, reducing 1 by rule 43 (Exp : NUM)
+reduce
+after reduction, shifting from state 71 to state 84
+loop
+yyn:0  state:84  yychar:-1
+ next yychar:59
+reduce
+state 84, reducing 3 by rule 40 (Exp : Exp '+' Exp)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:59
+state 62, shifting to state 75
+loop
+state 75, reducing 4 by rule 30 (Cmd : IDENT '=' Exp ';')
+reduce
+after reduction, shifting from state 50 to state 50
+loop
+yyn:0  state:50  yychar:-1
+ next yychar:257
+state 50, shifting to state 43
+loop
+yyn:0  state:43  yychar:-1
+ next yychar:61
+state 43, shifting to state 51
+loop
+yyn:0  state:51  yychar:-1
+ next yychar:257
+state 51, shifting to state 55
+loop
+yyn:0  state:55  yychar:-1
+ next yychar:272
+reduce
+state 55, reducing 1 by rule 45 (Exp : IDENT)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:272
+state 62, shifting to state 68
+loop
+yyn:0  state:68  yychar:-1
+ next yychar:40
+state 68, shifting to state 57
+loop
+yyn:0  state:57  yychar:-1
+ next yychar:257
+state 57, shifting to state 55
+loop
+yyn:0  state:55  yychar:-1
+ next yychar:62
+reduce
+state 55, reducing 1 by rule 45 (Exp : IDENT)
+reduce
+after reduction, shifting from state 57 to state 67
+loop
+yyn:0  state:67  yychar:62
+state 67, shifting to state 70
+loop
+yyn:0  state:70  yychar:-1
+ next yychar:257
+state 70, shifting to state 55
+loop
+yyn:0  state:55  yychar:-1
+ next yychar:41
+reduce
+state 55, reducing 1 by rule 45 (Exp : IDENT)
+reduce
+after reduction, shifting from state 70 to state 83
+loop
+yyn:0  state:83  yychar:41
+reduce
+state 83, reducing 3 by rule 41 (Exp : Exp '>' Exp)
+reduce
+after reduction, shifting from state 57 to state 67
+loop
+yyn:0  state:67  yychar:41
+state 67, shifting to state 80
+loop
+state 80, reducing 3 by rule 44 (Exp : '(' Exp ')')
+reduce
+after reduction, shifting from state 68 to state 81
+loop
+yyn:0  state:81  yychar:-1
+ next yychar:272
+reduce
+state 81, reducing 3 by rule 42 (Exp : Exp AND Exp)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:272
+state 62, shifting to state 68
+loop
+yyn:0  state:68  yychar:-1
+ next yychar:40
+state 68, shifting to state 57
+loop
+yyn:0  state:57  yychar:-1
+ next yychar:257
+state 57, shifting to state 55
+loop
+yyn:0  state:55  yychar:-1
+ next yychar:62
+reduce
+state 55, reducing 1 by rule 45 (Exp : IDENT)
+reduce
+after reduction, shifting from state 57 to state 67
+loop
+yyn:0  state:67  yychar:62
+state 67, shifting to state 70
+loop
+yyn:0  state:70  yychar:-1
+ next yychar:258
+state 70, shifting to state 56
+loop
+state 56, reducing 1 by rule 43 (Exp : NUM)
+reduce
+after reduction, shifting from state 70 to state 83
+loop
+yyn:0  state:83  yychar:-1
+ next yychar:41
+reduce
+state 83, reducing 3 by rule 41 (Exp : Exp '>' Exp)
+reduce
+after reduction, shifting from state 57 to state 67
+loop
+yyn:0  state:67  yychar:41
+state 67, shifting to state 80
+loop
+state 80, reducing 3 by rule 44 (Exp : '(' Exp ')')
+reduce
+after reduction, shifting from state 68 to state 81
+loop
+yyn:0  state:81  yychar:-1
+ next yychar:59
+reduce
+state 81, reducing 3 by rule 42 (Exp : Exp AND Exp)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:59
+state 62, shifting to state 75
+loop
+state 75, reducing 4 by rule 30 (Cmd : IDENT '=' Exp ';')
+reduce
+after reduction, shifting from state 50 to state 50
+loop
+yyn:0  state:50  yychar:-1
+ next yychar:260
+state 50, shifting to state 44
+loop
+yyn:0  state:44  yychar:-1
+ next yychar:40
+state 44, shifting to state 53
+loop
+yyn:0  state:53  yychar:-1
+ next yychar:257
+state 53, shifting to state 55
+loop
+yyn:0  state:55  yychar:-1
+ next yychar:41
+reduce
+state 55, reducing 1 by rule 45 (Exp : IDENT)
+reduce
+after reduction, shifting from state 53 to state 64
+loop
+yyn:0  state:64  yychar:41
+state 64, shifting to state 77
+loop
+yyn:0  state:77  yychar:-1
+ next yychar:257
+state 77, shifting to state 43
+loop
+yyn:0  state:43  yychar:-1
+ next yychar:61
+state 43, shifting to state 51
+loop
+yyn:0  state:51  yychar:-1
+ next yychar:258
+state 51, shifting to state 56
+loop
+state 56, reducing 1 by rule 43 (Exp : NUM)
+reduce
+after reduction, shifting from state 51 to state 62
+loop
+yyn:0  state:62  yychar:-1
+ next yychar:59
+state 62, shifting to state 75
+loop
+state 75, reducing 4 by rule 30 (Cmd : IDENT '=' Exp ';')
+reduce
+after reduction, shifting from state 77 to state 87
+loop
+yyn:0  state:87  yychar:-1
+ next yychar:125
+reduce
+state 87, reducing 0 by rule 34 (RestoIf :)
+reduce
+after reduction, shifting from state 87 to state 95
+loop
+state 95, reducing 6 by rule 29 (Cmd : IF '(' Exp ')' Cmd RestoIf)
+reduce
+after reduction, shifting from state 50 to state 50
+loop
+yyn:0  state:50  yychar:125
+reduce
+state 50, reducing 0 by rule 26 (ListaCmd :)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 50 to state 61
+loop
+state 61, reducing 2 by rule 25 (ListaCmd : Cmd ListaCmd)
+reduce
+after reduction, shifting from state 42 to state 48
+loop
+yyn:0  state:48  yychar:125
+state 48, shifting to state 60
+loop
+state 60, reducing 4 by rule 16 (RestoFuncProt : '{' DeclFuncVar ListaCmd '}')
+reduce
+after reduction, shifting from state 35 to state 39
+loop
+state 39, reducing 8 by rule 15 (DeclFuncProt : FUNC TypeOrVoid IDENT $$3 '(' FormalPar ')' RestoFuncProt)
+params: [Id: c          Classe: NomeParam       Tipo: double, Id: a             Classe: NomeParam       Tipo: int]
+reduce
+after reduction, shifting from state 9 to state 11
+loop
+state 11, reducing 1 by rule 6 (Decl : DeclFuncProt)
+reduce
+after reduction, shifting from state 9 to state 9
+loop
+yyn:0  state:9  yychar:-1
+ next yychar:0
+reduce
+state 9, reducing 0 by rule 4 (DecList :)
+reduce
+after reduction, shifting from state 9 to state 16
+loop
+state 16, reducing 2 by rule 3 (DecList : Decl DecList)
+reduce
+after reduction, shifting from state 9 to state 16
+loop
+state 16, reducing 2 by rule 3 (DecList : Decl DecList)
+reduce
+after reduction, shifting from state 9 to state 16
+loop
+state 16, reducing 2 by rule 3 (DecList : Decl DecList)
+reduce
+after reduction, shifting from state 9 to state 16
+loop
+state 16, reducing 2 by rule 3 (DecList : Decl DecList)
+reduce
+after reduction, shifting from state 9 to state 16
+loop
+state 16, reducing 2 by rule 3 (DecList : Decl DecList)
+reduce
+after reduction, shifting from state 2 to state 8
+loop
+state 8, reducing 2 by rule 2 (prog : $$1 DecList)
+reduce
+After reduction, shifting from state 0 to state 1
 
 
+Listagem da tabela de simbolos:
+
+Id: _erro_      Classe: TipoBase        Tipo: null
+Id: int         Classe: TipoBase        Tipo: null
+Id: double      Classe: TipoBase        Tipo: null
+Id: boolean     Classe: TipoBase        Tipo: null
+Id: array       Classe: TipoBase        Tipo: null
+Id: void        Classe: TipoBase        Tipo: null
+Id: i           Classe: VarGlobal       Tipo: int
+Id: j           Classe: VarGlobal       Tipo: int
+Id: k           Classe: VarGlobal       Tipo: int
+Id: x           Classe: VarGlobal       Tipo: double
+Id: y           Classe: VarGlobal       Tipo: double
+Id: b           Classe: VarGlobal       Tipo: boolean
+Id: ok          Classe: VarGlobal       Tipo: boolean
+[Id: c          Classe: NomeParam       Tipo: double, Id: a             Classe: NomeParam       Tipo: int]
+Id: main        Classe: NomeFuncao      Tipo: func(double, int) -> void
 
 
-
-
-
-
+Feito!
+➜  tde4-compiladores git:(main) ✗ 

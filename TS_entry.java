@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Write a description of class Paciente here.
@@ -41,6 +43,14 @@ public class TS_entry {
       return tipoBase;
    }
 
+   public ClasseID getClasse() {
+      return classe;
+   }
+
+   public TabSimb getLocals() {
+      return locals;
+   }
+
    public String toString() {
       StringBuilder aux = new StringBuilder("");
 
@@ -70,12 +80,15 @@ public class TS_entry {
          return "boolean";
       else if (tipo == Parser.Tp_DOUBLE)
          return "double";
-         
+
       else if (tipo.getTipo() == Parser.Tp_ARRAY)
          return String.format("array(%d, %s)", tipo.nroElementos, tipo2str(tipo.tipoBase));
-      else if (tipo.getTipo() == Parser.Tp_Func)
-         return String.format("func() -> %s", tipo2str(tipo.tipoBase));
-
+      else if (tipo.getTipo() == Parser.Tp_Func) {
+         List<TS_entry> params = tipo.locals.getParams();
+         String paramsString = params.stream().map(p -> tipo2str(p.tipo)).collect(Collectors.joining(", "));
+         tipo.getLocals().listar();
+         return String.format("func(%s) -> %s", paramsString, tipo2str(tipo.tipoBase));
+      }
       else if (tipo == Parser.Tp_ERRO)
          return "_erro_";
       else if (tipo == Parser.Tp_Void)
