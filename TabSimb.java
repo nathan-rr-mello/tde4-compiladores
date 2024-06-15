@@ -17,6 +17,10 @@ public class TabSimb {
     lista.add(nodo);
   }
 
+  public void remove(String id) {
+    lista.removeIf(e -> e.getId().equals(id));
+  }
+
   public void listar() {
     int cont = 0;
     System.out.println("\n\nListagem da tabela de simbolos:\n");

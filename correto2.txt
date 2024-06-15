@@ -1,4 +1,3 @@
-
 int i, j, k;
 
 double x, y;
@@ -6,12 +5,19 @@ double x, y;
 boolean b;
 boolean ok;
 
-func int plusOne(int num) {
-   return num + 1;
+func int plusOne(int num);
+func void main();
+
+func void plusOne(int num) {
+    int retorno;
+    retorno = 3;
+    if (b) {
+        retorno = 4;
+    }
 }
 
 func void main() {
-    double a;
+    int a;
     a = plusOne(2);
 }
 

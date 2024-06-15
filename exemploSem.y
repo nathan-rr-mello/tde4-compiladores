@@ -23,10 +23,13 @@
 %type <obj> Type
 %type <obj> TypeOrVoid
 %type <obj> Exp
+%type <obj> ListaCmd
+%type <obj> Cmd
+%type <obj> RestoFuncProt
 
 %%
 
-prog : { currentClass = ClasseID.VarGlobal; } DecList /*Main*/ ;
+prog : { currentClass = ClasseID.VarGlobal; } DecList ;
 
 DecList : Decl DecList
         | 
@@ -34,8 +37,6 @@ DecList : Decl DecList
 
 Decl  : DeclVar
       | DeclFuncProt
-     // | DeclProt
-     // | DeclFunc
       ;
 
 DeclVar : Type { currentType = (TS_entry) $1; } TArray IdList ';'
@@ -49,7 +50,7 @@ Id  : IDENT   { TS_entry nodo = pesquisa($1);
                 if (nodo != null) 
                     yyerror("(sem) variavel >" + $1 + "< jah declarada");
                 else ts.insert(new TS_entry($1, currentType, currentClass)); 
-              }  
+              }
     ;
 
 TArray : '[' NUM ']'  TArray { currentType = new TS_entry("?", Tp_ARRAY, 
@@ -58,41 +59,29 @@ TArray : '[' NUM ']'  TArray { currentType = new TS_entry("?", Tp_ARRAY,
        |
        ;
 
-// colocar o nome da funcao na tabela de simbolos com os parametros e o tipo de retorno
-/* DeclProt  : FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' ';'
-              {
-                //criar funcao que valida declarao com base no prototipo
-                TS_entry nodo = new TS_entry($3, (TS_entry) $2, ClasseID.NomeFuncao);
-                nodo.locals = ts;
-                closeScope();
-                ts.insert(nodo);
-              }
-          ;
-
-DeclFunc  :  FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' '{' DeclFuncVar ListaCmd '}' 
-              {
-                //criar funcao que valida declarao com base no prototipo
-                // TS_entry nodo = new TS_entry($3, (TS_entry) $2, ClasseID.NomeFuncao);
-                // nodo.locals = ts;
-                 closeScope();
-                // ts.insert(nodo);
-              }
-          ; */
-
-DeclFuncProt  : FUNC TypeOrVoid IDENT { openScope(); } '(' FormalPar ')' RestoFuncProt
+DeclFuncProt  : FUNC TypeOrVoid IDENT { openScope(); ts.insert(new TS_entry("return", (TS_entry) $2, ClasseID.VarLocal)); } '(' FormalPar ')' RestoFuncProt
                 {
-                  //criar funcao que valida declarao com base no prototipo
+                  TS_entry nodo = pesquisa($3);
+                  TS_entry typeOrVoid = (TS_entry) $2; TS_entry retorno = (TS_entry) $8;
+                  if (currentClass == ClasseID.NomeFuncao) {
+                    if (nodo == null) yyerror("(sem) falta prototipo da funcao " + $3);
+                    else if (!validaParams(nodo.getLocals(), ts)) yyerror("(sem) prototipo e implementacao de funcao nao correspondem: " + $3);
+                    if (retorno == Tp_Void && typeOrVoid != Tp_Void) yyerror("(sem) falta declaração de retorno no bloco principal da funcao " + $3);
+                  } else if (nodo != null) yyerror("(sem) identificador " + $3 + " ja declarado");
+                  ts.remove("return");
+                  
                   TS_entry tipoFuncao = new TS_entry("?", Tp_Func, currentClass);
                   tipoFuncao.setTipoBase((TS_entry) $2);
                   tipoFuncao.setLocals(ts);
-                  TS_entry nodo = new TS_entry($3, tipoFuncao, currentClass);
+                  nodo = new TS_entry($3, tipoFuncao, currentClass);
                   nodo.setLocals(ts);
                   closeScope();
                   ts.insert(nodo);
                 }
               ;
 
-RestoFuncProt : '{' DeclFuncVar ListaCmd '}' { currentClass = ClasseID.NomeFuncao;}
+RestoFuncProt : '{' { currentClass = ClasseID.VarLocal; } DeclFuncVar ListaCmd '}' 
+                { $$ = $4; currentClass = ClasseID.NomeFuncao; }
               | ';' { currentClass = ClasseID.NomePrototipo; }
               ;
 
@@ -111,31 +100,41 @@ ParamList : Type IDENT { ts.insert(new TS_entry($2, (TS_entry) $1, ClasseID.Nome
 Block : '{' ListaCmd '}'
       ;
 
-ListaCmd  : Cmd ListaCmd
-          |  // vazio
+ListaCmd  : Cmd ListaCmd {  TS_entry cmd = (TS_entry) $1; TS_entry listaCmd = (TS_entry) $2;
+                            if (cmd == Tp_Void) $$ = listaCmd;
+                            else if (listaCmd == Tp_Void) $$ = cmd;
+                            else $$ = Tp_Void;
+                          }
+          | { $$ = Tp_Void; } // vazio 
           ;
 
-Cmd : Block
-    | WHILE '(' Exp ')' Cmd { if ( ((TS_entry)$3) != Tp_BOOL) 
+Cmd : Block { $$ = Tp_Void; } 
+    | WHILE '(' Exp ')' Cmd { if (((TS_entry)$3) != Tp_BOOL)
                                      yyerror("(sem) expressão (while) deve ser lógica "+((TS_entry)$3).getTipo());
+                              $$ = Tp_Void;
                             }
-    | IF '(' Exp ')' Cmd RestoIf  {  if ( ((TS_entry)$3) != Tp_BOOL) 
-                                     yyerror("(sem) expressão (if) deve ser lógica "+((TS_entry)$3).getTipo());
-                                  }     
+    | IF '(' Exp ')' Cmd RestoIf  { if (((TS_entry)$3) != Tp_BOOL) yyerror("(sem) expressão (if) deve ser lógica "+((TS_entry)$3).getTipo());
+                                    $$ = Tp_Void;
+                                  }
     | IDENT '=' Exp ';' { TS_entry nodo = pesquisa($1);
                           if (nodo != null) validaTipo(ATRIB, nodo.getTipo(), (TS_entry) $3);
                           else yyerror("(sem) var <" + $1 + "> nao declarada");
+                          $$ = Tp_Void;
                         }                              
-    | IDENT'[' Exp ']' '=' Exp ';'
-    | RETURN Exp ';'
+    | IDENT'[' Exp ']' '=' Exp ';' { $$ = Tp_Void;}
+    | RETURN Exp ';'  { $$ = $2; 
+                        TS_entry expected = pesquisa("return").getTipo(); TS_entry actual = (TS_entry) $2;
+                        if (expected != actual) yyerror("(sem) tipo de retorno incompativel com a funcao esperava " + expected.getTipoStr() + " era " + actual.getTipoStr());
+                      }
+    | RETURN ';'  { $$ = Tp_Void; 
+                    TS_entry expected = pesquisa("return").getTipo();
+                    if (expected != Tp_Void) yyerror("(sem) tipo de retorno incompativel com a funcao esperava " + expected.getTipoStr() + " era void");
+                  }
     ;
 
 RestoIf : ELSE Cmd
         |   // vazio
         ;
-             //
-              // faria mais sentido reconhecer todos os tipos como ident! 
-              // 
 
 Type : INT    { $$ = Tp_INT; }
      | DOUBLE  { $$ = Tp_DOUBLE; }
@@ -146,8 +145,6 @@ Type : INT    { $$ = Tp_INT; }
 TypeOrVoid  : Type  { $$ = $1; }
             | VOID { $$ = Tp_Void; }
             ;
-
-//Main :  VOID MAIN '(' ')' Block ;
 
 Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
     | Exp '>' Exp { $$ = validaTipo('>', (TS_entry)$1, (TS_entry)$3); }
@@ -174,12 +171,14 @@ Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
     | IDENT { openScope(); } '(' Args ')' {  TS_entry nodo = pesquisa($1);
                                             if (nodo == null) {
                                               yyerror("(sem) função <" + $1 + "> nao declarada");
-
+                                              $$ = Tp_ERRO;
                                             } else if (nodo.getTipo().getTipo() != Tp_Func) {
                                               yyerror("(sem) <" + $1 + "> não é uma função");
+                                              $$ = Tp_ERRO;
 
                                             } else if (!validaParams(nodo.getLocals(), ts)) {
                                               yyerror("(sem) parametros incompativeis na chamada da funcao " + $1);
+                                              $$ = Tp_ERRO;
 
                                             } else {
                                               $$ = nodo.getTipo().getTipoBase();
