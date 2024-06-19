@@ -9,14 +9,14 @@
 %token IDENT, NUM, FUNC
 %token IF, ELSE, WHILE, RETURN
 %token INT, DOUBLE, BOOLEAN, VOID
-%token EQUALOP, NOTEQUALOP, LTEOP, GTEOP, AND, OR
-// EQUALOP ==, NOTEQUALOP !=, LTEOP <=, GTEOP >=
+%token EQUAL, NOTEQUAL, LTEQUAL, GTEQUAL, AND, OR
+// EQUAL ==, NOTEQUAL !=, LTEQUAL <=, GTEQUAL >=
 
 %right '='
-%nonassoc '>'
+%nonassoc '>' '<' EQUAL GTEQUAL LTEQUAL NOTEQUAL
 %left '+'
-%left AND
-%left '['  
+%left AND OR
+%left '['
 
 %type <sval> IDENT
 %type <ival> NUM
@@ -64,12 +64,15 @@ DeclFuncProt  : FUNC TypeOrVoid IDENT { openScope(); ts.insert(new TS_entry("ret
                   TS_entry nodo = pesquisa($3);
                   TS_entry typeOrVoid = (TS_entry) $2; TS_entry retorno = (TS_entry) $8;
                   if (currentClass == ClasseID.NomeFuncao) {
-                    if (nodo == null) yyerror("(sem) falta prototipo da funcao " + $3);
-                    else if (!validaParams(nodo.getLocals(), ts)) yyerror("(sem) prototipo e implementacao de funcao nao correspondem: " + $3);
-                    if (retorno == Tp_Void && typeOrVoid != Tp_Void) yyerror("(sem) falta declaração de retorno no bloco principal da funcao " + $3);
+                    if (nodo == null) yyerror("(sem) falta prototipo da funcao: " + $3);
+                    else {
+                      if (!validaParams(nodo.getLocals(), ts)) yyerror("(sem) prototipo e implementacao de parametros de funcao nao correspondem: " + $3);
+                      if (nodo.getTipo().getTipoBase() != typeOrVoid) yyerror("(sem) tipo de retorno incompativel com o prototipo da funcao: " + $3);
+                    } 
+                    if (retorno == Tp_Void && typeOrVoid != Tp_Void) yyerror("(sem) funcao" + $3 + "retorna void mas declaracao espera " + typeOrVoid.getTipoStr());
                   } else if (nodo != null) yyerror("(sem) identificador " + $3 + " ja declarado");
                   ts.remove("return");
-                  
+
                   TS_entry tipoFuncao = new TS_entry("?", Tp_Func, currentClass);
                   tipoFuncao.setTipoBase((TS_entry) $2);
                   tipoFuncao.setLocals(ts);
@@ -148,7 +151,13 @@ TypeOrVoid  : Type  { $$ = $1; }
 
 Exp : Exp '+' Exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
     | Exp '>' Exp { $$ = validaTipo('>', (TS_entry)$1, (TS_entry)$3); }
-    | Exp AND Exp { $$ = validaTipo(AND, (TS_entry)$1, (TS_entry)$3); } 
+    | Exp '<' Exp { $$ = validaTipo('<', (TS_entry)$3, (TS_entry)$1); }
+    | Exp LTEQUAL Exp { $$ = validaTipo(LTEQUAL, (TS_entry)$1, (TS_entry)$3); }
+    | Exp GTEQUAL Exp { $$ = validaTipo(GTEQUAL, (TS_entry)$1, (TS_entry)$3); }
+    | Exp EQUAL Exp { $$ = validaTipo(EQUAL, (TS_entry)$1, (TS_entry)$3); }
+    | Exp NOTEQUAL Exp { $$ = validaTipo(NOTEQUAL, (TS_entry)$1, (TS_entry)$3); }
+    | Exp AND Exp { $$ = validaTipo(AND, (TS_entry)$1, (TS_entry)$3); }
+    | Exp OR Exp { $$ = validaTipo(OR, (TS_entry)$1, (TS_entry)$3); }
     | NUM         { $$ = Tp_INT; }      
     | '(' Exp ')' { $$ = $2; }
     | IDENT       { TS_entry nodo = pesquisa($1);
@@ -309,18 +318,28 @@ ArgList : Exp ',' ArgList { ts.insert(new TS_entry("?", (TS_entry) $1, ClasseID.
                         yyerror("(sem) tipos incomp. para soma: "+ A.getTipoStr() + " + "+B.getTipoStr());
                     break;
 
-             case '>' :
+              case '>' :
+              case '<' :
+              case LTEQUAL:
+              case GTEQUAL:
                      if ((A == Tp_INT || A == Tp_DOUBLE) && (B == Tp_INT || B == Tp_DOUBLE))
                          return Tp_BOOL;
                       else
                         yyerror("(sem) tipos incomp. para op relacional: "+ A.getTipoStr() + " > "+B.getTipoStr());
                       break;
-
              case AND:
+             case OR:
                      if (A == Tp_BOOL && B == Tp_BOOL)
                          return Tp_BOOL;
                       else
                         yyerror("(sem) tipos incomp. para op lógica: "+ A.getTipoStr() + " && "+B.getTipoStr());
+                 break;
+            case NOTEQUAL:
+            case EQUAL:
+                     if (A == B)
+                         return Tp_BOOL;
+                      else
+                        yyerror("(sem) tipos incomp. para op de igualdade: "+ A.getTipoStr() + " == "+B.getTipoStr());
                  break;
             }
 

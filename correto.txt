@@ -1,11 +1,11 @@
-$TRACE_ON
-
-int i, j, k;
+int i, j, k, a;
 
 double x, y;
 
 boolean b;
 boolean ok;
+
+func void main();
 
 func void main() {
    j = a;
@@ -14,7 +14,7 @@ func void main() {
    x = i + 4;
    y = y + i + 2;  
  
-   ok = b && (x > i) && (i > 3);
+   ok = b && (x > i) || (i < 3);
 
    if (ok)
       i = 7;

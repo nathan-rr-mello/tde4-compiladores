@@ -1,13 +1,15 @@
 int i, j, k;
 
+double x, y, z;
+
 func int plusOne(int num);
 func void main();
 
 func int plusOne(int num) {
-    int retorno;
-    retorno = 3;
-    if (retorno != k) {
-        retorno = num;
+    double retorno;
+    retorno = x;
+    if (retorno != z) {
+        retorno = y;
     }
     return retorno;
 }
@@ -15,4 +17,5 @@ func int plusOne(int num) {
 func void main() {
     int a;
     a = plusOne(2);
+    return a;
 }

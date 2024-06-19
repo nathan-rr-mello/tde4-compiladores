@@ -1,25 +1,16 @@
-int i;
-int j;
-int k;
+int i, j;
+double x, y;
 
-double x;
-double y;
+func void main();
 
-double i;
-
-bool b;
-bool ok;
-
-void main() {
-   j = k;
-   i = 5;  
-
-   z = 23; 
+func void main() {
+   i = 5;
+   j = y;
 
    x = i + 4;
-   y = y + i + 2;  
+   y = y + i + 2;
  
-   ok = b && (x > i) && (i > 3);
+   ok = b && (x + i);
 
    if (ok)
       i = 7;

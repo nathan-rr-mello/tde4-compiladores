@@ -1,13 +1,13 @@
 int i, j, k;
 
-func int plusOne(int num);
+func double plusOne(double num);
 func void main();
 
 func int plusOne(int num) {
     int retorno;
     retorno = 3;
     if (retorno != k) {
-        retorno = num;
+        retorno = 4;
     }
     return retorno;
 }

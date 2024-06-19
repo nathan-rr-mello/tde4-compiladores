@@ -28,11 +28,18 @@ NL  = \n|\r|\r\n
 "$TRACE_OFF" { yyparser.setDebug(false); }
 "$MOSTRA_TS" { yyparser.listarTS(); }
 
+"&&" { return Parser.AND; }
+"||" { return Parser.OR; }
+"==" { return Parser.EQUAL; }
+"!=" { return Parser.NOTEQUAL; }
+">=" { return Parser.GTEQUAL; }
+"<=" { return Parser.LTEQUAL; }
 
 /* operators */
 "+" | 
 "=" |
 ">" |
+"<" |
 ";" |
 "(" |
 ")" |
@@ -41,8 +48,6 @@ NL  = \n|\r|\r\n
 "}" |
 "[" | 
 "]"    { return (int) yycharat(0); }
-
-"&&" { return Parser.AND; }
 
 {NUM}  { yyparser.yylval = new ParserVal(Integer.parseInt(yytext())); 
          return Parser.NUM; }
